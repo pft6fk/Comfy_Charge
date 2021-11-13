@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChargeStation">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:src="@drawable/charge_station"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:rowCount="8"
+        android:columnCount="2"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/text_nameStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muller_regular"
+            android:text="Name of charging station:"/>
+
+
+        <TextView
+            android:id="@+id/time_order"
+            android:layout_width="99dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:fontFamily="@font/muller_regular"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="fill"
+            android:textColor="@color/black"
+            android:text="Wallbox Fast Electric Charging Station EV Car Charger" />
+
+        <TextView
+            android:id="@+id/text_powerStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muller_regular"
+            android:text="Power of charging station:"/>
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_rowWeight="1"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/muller_regular"
+            android:layout_columnWeight="1"
+            android:textColor="@color/black"
+            android:text="22 kW/h"
+            android:layout_gravity="fill"/>
+
+        <TextView
+            android:id="@+id/text_positionStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muller_regular"
+            android:text="Location of charging station:"
+            android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:id="@+id/comments"
+            android:layout_width="75dp"
+            android:layout_rowWeight="1"
+            android:fontFamily="@font/muller_regular"
+            android:layout_marginBottom="12dp"
+            android:layout_columnWeight="1"
+            android:textColor="@color/black"
+            android:layout_gravity="fill"
+            android:text="Makro supermarketi" />
+
+        <TextView
+            android:id="@+id/text_numberOfStations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muller_regular"
+            android:text="Number of stations:"/>
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_rowWeight="1"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="@font/muller_regular"
+        android:layout_columnWeight="1"
+        android:textColor="@color/black"
+        android:text="4"
+        android:layout_gravity="fill"/>
+
+        <TextView
+            android:id="@+id/text_availabilityOfStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muller_regular"
+            android:layout_marginEnd="16dp"
+            android:text="Number of available stations:"/>
+
+        <TextView
+            android:id="@+id/payment_type"
+            android:layout_rowWeight="1"
+            android:layout_marginBottom="12dp"
+            android:layout_columnWeight="1"
+            android:textColor="@color/black"
+            android:fontFamily="@font/muller_regular"
+            android:text="2"
+            android:layout_gravity="fill"/>
+
+    </GridLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btCreateRoute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/border_line_black"
+        android:textColor="@color/black"
+        android:text="@string/create_route"
+        android:fontFamily="@font/muller_regular"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

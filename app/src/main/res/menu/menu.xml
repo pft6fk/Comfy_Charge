@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/typeChargeStationBuy1"
+            android:title="@string/stringChargeStationType1"/>
+
+        <item
+            android:id="@+id/typeChargeStationBuy2"
+            android:title="@string/stringChargeStationType2"/>
+
+        <item
+            android:id="@+id/typeChargeStationBuy3"
+            android:title="@string/stringChargeStationType3"/>
+
+        <item
+            android:id="@+id/typeChargeStationBuy4"
+            android:title="@string/stringChargeStationType4"/>
+
+        <item
+            android:id="@+id/chargingStation"
+            android:title="@string/stringChargingStation"/>
+
+        <item
+            android:id="@+id/findUs"
+            android:title="@string/stringFindUs"/>
+
+        <item
+            android:id="@+id/shop"
+            android:title="@string/stringShop"/>
+
+        <item
+            android:id="@+id/account"
+            android:title="@string/stringAccount"/>
+
+        <item
+            android:id="@+id/language"
+            android:title="@string/stringChargeStationType"
+            app:iconTint="@color/black"
+            />
+
+
+
+    </group>
+</menu>

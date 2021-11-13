@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Map</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="stringChargeStationType1">Type 1</string>
+    <string name="stringChargeStationType2">Type 2</string>
+    <string name="stringChargeStationType3">Type 3</string>
+    <string name="stringChargeStationType4">Type 4</string>
+    <string name="stringChargingStation">Charging Station</string>
+    <string name="stringFindUs">Find Us</string>
+    <string name="stringShop">Shop</string>
+    <string name="stringAccount">Account</string>
+    <string name="stringChargeStationType">language (US)</string>
+    <string name="stringMenu">Menu</string>
+    <string name="find_nearest_location">Find nearest location</string>
+    <string name="string_start">Start</string>
+    <string name="stringEmailAddress">Email address</string>
+    <string name="stringPassword">Password</string>
+    <string name="signIn">Sign in</string>
+    <string name="string_cancel">Cancel</string>
+    <string name="forgot_email">Forgot email?</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="create_account">Create account</string>
+    <string name="create_route">Find the route</string>
+
+</resources>
