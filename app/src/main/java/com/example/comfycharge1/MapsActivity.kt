@@ -84,6 +84,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             setLocations()
         }
 
+        mMap.setOnPolylineClickListener(this)
         mMap.setOnInfoWindowClickListener(this)
 
         setUpMap()
@@ -222,6 +223,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     "TAG123",
                     "calculateDirections: geocodedWayPoints: " + result.geocodedWaypoints[0].toString()
                 )
+                addPolylinesToMap(result)
             }
         })
     }
