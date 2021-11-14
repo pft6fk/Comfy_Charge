@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,23 +15,25 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.comfycharge1.databinding.ActivityMapsBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.example.comfycharge1.databinding.ActivityMapsBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
 import com.google.maps.DirectionsApiRequest
 import com.google.maps.GeoApiContext
 import com.google.maps.PendingResult
 import com.google.maps.internal.PolylineEncoding
 import com.google.maps.model.DirectionsResult
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener,
     GoogleMap.OnPolylineClickListener {
@@ -44,6 +45,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     lateinit var drawerLayout: DrawerLayout
     private var currentLatLong = LatLng(41.33299704410577, 69.26452677632705)
     private var mGeoApiContext: GeoApiContext? = null
+    private var mPolylinesData: ArrayList<PolylineData> = ArrayList()
+    private var mTripMarker: ArrayList<Marker> = ArrayList()
+    private var mSelectedMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -245,6 +249,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     "Yes"
                 ) {
                         dialog, id ->
+                    resetSelectedMarker()
+                    mSelectedMarker = marker
                     calculateDirections(marker)
                     dialog.dismiss() }
                 .setNegativeButton(
@@ -271,6 +277,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun addPolylinesToMap(result: DirectionsResult) {
         Handler(Looper.getMainLooper()).post(Runnable {
             Log.d("TAG123", "run: result routes: " + result.routes.size)
+            if(mPolylinesData.size > 0){
+                for (polylineData: PolylineData in mPolylinesData){
+                    polylineData.polyline.remove()
+                }
+                mPolylinesData.clear()
+                mPolylinesData = ArrayList()
+            }
             for (route in result.routes) {
                 Log.d("TAG123", "run: leg: " + route.legs[0].toString())
                 val decodedPath = PolylineEncoding.decode(route.overviewPolyline.encodedPath)
@@ -291,12 +304,49 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     mMap.addPolyline(PolylineOptions().addAll(newDecodedPath))
                 polyline.color = ContextCompat.getColor(this, android.R.color.darker_gray)
                 polyline.isClickable = true
+                mPolylinesData.add(PolylineData(polyline, route.legs[0]))
+                zoomRoute(polyline.points)
             }
         })
     }
 
     override fun onPolylineClick(p0: Polyline) {
-        p0.setColor(ContextCompat.getColor(this, R.color.blue))
-        p0.setZIndex(1F)
+        for(polylineData:PolylineData in mPolylinesData){
+    //        Log.d(TAG, "onPolylineClick: toString: " + polylineData.toString());
+            if(p0.id.equals(polylineData.polyline.id)){
+                polylineData.polyline.color = ContextCompat.getColor(this, R.color.blue)
+                polylineData.polyline.zIndex = 1F
+            }
+            else{
+                polylineData.polyline.color = ContextCompat.getColor(this, R.color.gray)
+                polylineData.polyline.zIndex = 0F
+            }
+        }
+    }
+
+    private fun removeTripMarker(){
+        for (marker: Marker in mTripMarker){
+            marker.remove()
+        }
+    }
+
+    private fun resetSelectedMarker(){
+        if(mSelectedMarker != null){
+            mSelectedMarker!!.isVisible = true
+            removeTripMarker()
+        }
+    }
+
+    fun zoomRoute(lstLatLngRoute: List<LatLng?>?) {
+        if (mMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return
+        val boundsBuilder = LatLngBounds.Builder()
+        for (latLngPoint in lstLatLngRoute) boundsBuilder.include(latLngPoint)
+        val routePadding = 120
+        val latLngBounds = boundsBuilder.build()
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding),
+            600,
+            null
+        )
     }
 }
