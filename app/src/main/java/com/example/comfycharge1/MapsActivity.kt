@@ -34,7 +34,8 @@ import com.google.maps.PendingResult
 import com.google.maps.internal.PolylineEncoding
 import com.google.maps.model.DirectionsResult
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener,
+    GoogleMap.OnPolylineClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -292,5 +293,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 polyline.isClickable = true
             }
         })
+    }
+
+    override fun onPolylineClick(p0: Polyline) {
+        p0.setColor(ContextCompat.getColor(this, R.color.blue))
+        p0.setZIndex(1F)
     }
 }
