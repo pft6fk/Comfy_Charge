@@ -33,6 +33,7 @@ import com.google.maps.GeoApiContext
 import com.google.maps.PendingResult
 import com.google.maps.internal.PolylineEncoding
 import com.google.maps.model.DirectionsResult
+import java.lang.Exception
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener,
@@ -48,9 +49,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private var mPolylinesData: ArrayList<PolylineData> = ArrayList()
     private var mTripMarker: ArrayList<Marker> = ArrayList()
     private var mSelectedMarker: Marker? = null
+    private lateinit var markerPause: Marker
+    private var parseData: Array<Double> = arrayOf(0.0, 0.0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -60,6 +64,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         setSupportActionBar(binding.toolBar)
 
+        try {
+                val b = this.intent.extras
+                val array = b?.getStringArray("key")
+                Log.d("LOG123", "ACTIVITY latitude: " + array!![0] + "longitude: " + array[1])
+//                markerPause.position.longitude = array[0].toDouble()
+//                markerPause.position.latitude = array[0].toDouble()
+                resetSelectedMarker()
+                calculateDirections(markerPause)
+
+            }catch (e: Exception){
+                Log.d("LOG123", "exception: " + e)
+            }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -123,6 +139,53 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             MarkerOptions().position(station5).title("Fast charger")
                 .snippet("Grand Mir hotel station")
         )
+        val station6 = LatLng(41.3212798856485, 69.24807741030993)
+        mMap.addMarker(
+            MarkerOptions().position(station6).title("Fast charger").snippet("Megawatt station")
+        )
+        val station7 = LatLng(41.35556584170191,  69.24574168201505)
+        mMap.addMarker(
+            MarkerOptions().position(station7).title("Super fast charger")
+                .snippet("Jomiy Bozor")
+        )
+        val station8 = LatLng(41.344424614368194,   69.27948686751516)
+        mMap.addMarker(
+            MarkerOptions().position(station8).title("Fast charger").snippet("Amir Temur Square")
+        )
+        val station9 = LatLng(41.31369733385444, 69.17799879592985)
+        mMap.addMarker(
+            MarkerOptions().position(station9).title("Fast charger").snippet("Tok Bor station")
+        )
+        val station10 = LatLng(41.32997208389224, 69.42767814705246)
+        mMap.addMarker(
+            MarkerOptions().position(station10).title("Fast charger")
+                .snippet("AKFA University")
+        )
+        val station11 = LatLng(41.309127776816595,   69.34417120347817)
+        mMap.addMarker(
+            MarkerOptions().position(station11).title("Fast charger").snippet("TEAM University")
+        )
+        val station12 = LatLng(41.30621328385582, 69.30218559651927)
+        mMap.addMarker(
+            MarkerOptions().position(station12).title("Fast charger").snippet("Ashhabad Park")
+        )
+        val station13 = LatLng(41.28670733411575, 69.19004849051682)
+        mMap.addMarker(
+            MarkerOptions().position(station13).title("Fast charger").snippet("Farkhad Bazaar")
+        )
+        val station14 = LatLng(41.26064306069931, 69.27773105814967)
+        mMap.addMarker(
+            MarkerOptions().position(station14).title("Fast charger")
+                .snippet("Tashkent International Airport")
+        )
+        val station15 = LatLng(41.30520264054075,   69.24690620700387)
+        mMap.addMarker(
+            MarkerOptions().position(station15).title("Fast charger").snippet("Magic City")
+        )
+        val station16 = LatLng(41.36898504344621, 69.29098924578626)
+        mMap.addMarker(
+            MarkerOptions().position(station16).title("Fast charger").snippet("Mega Planet")
+        )
 
 
         binding.btFindNearLocation.visibility = View.GONE
@@ -154,7 +217,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         if (mGeoApiContext == null) {
             mGeoApiContext =
-                GeoApiContext.Builder().apiKey("AIzaSyARKFRFzIheLxDt4rTx8hN62HRTwUP7Gv4").build()
+                GeoApiContext.Builder().apiKey(R.string.google_maps_key.toString()).build()
         }
 
         mMap.isMyLocationEnabled = true
@@ -183,10 +246,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onMarkerClick(p0: Marker?) = false
 
-    private fun openInfo(location: LatLng) {
-
-    }
-
     //for using custom marker in map
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -198,10 +257,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    private fun calculateDirections(marker: Marker) {
+    private fun calculateDirections(marker: Marker?) {
         Log.d("TAG", "calculateDirections: calculating directions.")
         val destination = com.google.maps.model.LatLng(
-            marker.position.latitude,
+            marker!!.position.latitude,
             marker.position.longitude
         )
         val directions = DirectionsApiRequest(mGeoApiContext)
@@ -235,27 +294,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onInfoWindowClick(marker: Marker) {
         Log.d("TAG123", "inside info window")
+
+        parseData[0] = marker.position.latitude
+        parseData[1] = marker.position.longitude
         if (marker.snippet.equals("This is you")) {
             marker.hideInfoWindow()
         } else {
 
             val builder = AlertDialog.Builder(this)
-
-
-            Log.d("TAG123", "inside else condition")
+            builder.setTitle("Show more info?")
             builder.setMessage(marker.snippet)
                 .setCancelable(true)
                 .setPositiveButton(
                     "Yes"
                 ) {
+
                         dialog, id ->
                     resetSelectedMarker()
                     mSelectedMarker = marker
                     calculateDirections(marker)
+
+                    val b = Bundle()
+                    b.putStringArray("key", arrayOf(parseData[0].toString(), parseData[1].toString()))
+                    val i = Intent(this@MapsActivity, ChargeStation::class.java)
+                    i.putExtras(b)
+                    startActivity(i)
+                    finish()
+
                     dialog.dismiss() }
                 .setNegativeButton(
                     "No"
                 ) { dialog, id -> dialog.cancel()
+                    resetSelectedMarker()
+                    mSelectedMarker = marker
+                    calculateDirections(marker)
                     Log.d("TAG123", "inside setNegativeButton")}
 
             val dialog = builder.create()
